@@ -1,0 +1,27 @@
+mport pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('/covid_bymonth.csv')
+df_new = df.replace(to_replace = np.NaN, value = 0)
+df_new.total_recovered = df_new.total_recovered.astype(int)
+df_new.total_active = df_new.total_active.astype(int)
+
+bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Oktober', 'November', 'December']
+for i in range(len(bulan)):   
+    df_new.month[i] = bulan[i]
+    df_new.month[len(bulan) + i] = bulan[i]
+
+month_a = df_new.month[0:12]
+month_b = df_new.month[12:]
+total_deaths_a = df_new.total_deaths[0:12]
+total_deaths_b = df_new.total_deaths[12:]
+line_chart_a = plt.plot(month_a, total_deaths_a, marker='o', markerfacecolor='blue', markersize=10, color='skyblue', linewidth=3)
+line_chart_b = plt.plot(month_b, total_deaths_b, marker='o', markerfacecolor='orange', markersize=10, color='yellow', linewidth=3)
+plt.title('Total Deaths of COVID-19 Case Globally in 2020-2021', fontsize='15', color='red')
+plt.xlabel('Month', color='Black')
+plt.xticks(np.arange(len(month_a)), month_a, rotation=90)
+plt.ylabel('Total Deaths', color='Black')
+plt.legend(['2020','2021'])
+plt.grid(True)
+plt.show()
