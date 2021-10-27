@@ -1,4 +1,4 @@
-mport pandas as pd
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -25,3 +25,9 @@ plt.ylabel('Total Deaths', color='Black')
 plt.legend(['2020','2021'])
 plt.grid(True)
 plt.show()
+
+df_sum = df.groupby(['year']).sum().reset_index()
+df_sum.total_recovered = df_sum.total_recovered.astype(int)
+df_sum.total_active = df_sum.total_active.astype(int)
+df_sum = df_sum.drop(columns=['month','total_confirmed','total_active','total_recovered'])
+df_sum
