@@ -1,0 +1,4 @@
+select extract(month from date) month, extract(year from date) year, sum(deaths) total_deaths, sum(confirmed) total_confirmed, sum(recovered) total_recovered, sum(active) total_active,
+from `bigquery-public-data.covid19_jhu_csse.summary`
+group by year, month
+order by month
