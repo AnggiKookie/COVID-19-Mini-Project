@@ -1,0 +1,9 @@
+select date, country_region, sum(deaths) deaths, sum(confirmed) confirmed, sum(active) active, sum(recovered) recovered
+from `bigquery-public-data.covid19_jhu_csse.summary`
+where date in (
+    SELECT date
+    FROM `bigquery-public-data.covid19_jhu_csse.summary`
+    order by date desc
+    limit 1) and country_region = 'Indonesia'
+group by date, country_region
+order by country_region
