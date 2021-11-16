@@ -1,10 +1,13 @@
 select a.date, a.country_region, ifnull(a.recovered, 0) recovered, ifnull(b.deaths,0) deaths, ifnull(b.confirmed, 0) confirmed
 from(
-SELECT max(date) date, country_region, sum(recovered) recovered
+SELECT max(date) date, country_region, max(recovered) recovered
 FROM(
-    SELECT date, country_region, active, cast(recovered as int) recovered
-    FROM `bigquery-public-data.covid19_jhu_csse.summary`) table_a
-where recovered is not null and country_region is not null 
+    SELECT date, country_region, sum(recovered) recovered
+    FROM(
+        SELECT date, country_region, active, cast(recovered as int) recovered
+        FROM `bigquery-public-data.covid19_jhu_csse.summary`) table_a
+    where recovered is not null and country_region is not null 
+    group by country_region, date)
 group by country_region
 order by country_region asc) a
 left join 
