@@ -1,0 +1,25 @@
+select a.date, a.country_region, ifnull(a.recovered, 0) recovered, ifnull(b.deaths,0) deaths, ifnull(b.confirmed, 0) confirmed
+from(
+SELECT max(date) date, country_region, max(recovered) recovered
+FROM(
+    SELECT date, country_region, sum(recovered) recovered
+    FROM(
+        SELECT date, country_region, active, cast(recovered as int) recovered
+        FROM `bigquery-public-data.covid19_jhu_csse.summary`) table_a
+    where recovered is not null and country_region is not null 
+    group by country_region, date)
+group by country_region
+order by country_region asc) a
+left join 
+(select date, country_region, sum(deaths) deaths, sum(confirmed) confirmed
+from `bigquery-public-data.covid19_jhu_csse.summary`
+where date in (
+    SELECT date
+    FROM `bigquery-public-data.covid19_jhu_csse.summary`
+    order by date desc
+    limit 1)
+group by date, country_region
+order by country_region) b
+on a.country_region = b.country_region
+where a.country_region in ('Indonesia', 'Malaysia', 'Singapore', 'Myanmar', 'Cambodia', 'Laos', 'Vietnam', 'Philippines', 'Thailand', 'Brunei')
+order by deaths desc
