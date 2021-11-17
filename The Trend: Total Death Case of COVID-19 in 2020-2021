@@ -1,4 +1,0 @@
-    select extract(year from date) year, extract(month from date) month, date, sum(deaths) deaths
-    from `bigquery-public-data.covid19_jhu_csse.summary`
-    group by date
-    order by year desc, date desc
